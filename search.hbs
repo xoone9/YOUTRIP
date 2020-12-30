@@ -41,7 +41,7 @@
             display: inline-block;
             color: #f2f2f2;
             text-align: center;
-            padding: 14px 16px;
+            padding: 14px 20px;
             text-decoration: none;
             transition: 0.3s;
             font-size: 17px;
@@ -100,8 +100,8 @@
         <li><a href='./about'>ABOUT</a></li>
         <li><a href='./search'>지도검색</a></li>
         <li><a href='./category'>카테고리검색</a></li>
-        <li><a href='./navi'>경로겸색?</a></li>
         <li><a href='./neardes'>주변검색</a></li>
+        <li><a href='./navi'>경로검색</a></li>
         <li class="icon">
             <a href="javascript:void(0);" style="font-size:15px;" onclick="myFunction()">☰</a>
         </li>
@@ -118,7 +118,8 @@
         @import url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
         @import url(//fonts.googleapis.com/earlyaccess/jejuhallasan.css);
         @import url(//fonts.googleapis.com/earlyaccess/jejumyeongjo.css);
-         @import url(//fonts.googleapis.com/earlyaccess/nanumpenscript.css);
+        @import url(//fonts.googleapis.com/earlyaccess/nanumpenscript.css);
+
         .map_wrap,
         .map_wrap * {
             margin: 0;
@@ -167,7 +168,7 @@
             margin: 3px 0;
         }
 
-      
+
 
         #menu_wrap .option {
             text-align: center;
@@ -177,7 +178,7 @@
             font-size: 16px;
             width: 170px;
             height: 27px;
-           
+
         }
 
         #menu_wrap p {
@@ -673,7 +674,7 @@
         <div id="map" style="width:100%;height:100%;position:relative;overflow:scroll;"></div>
 
         <div id="menu_wrap" class="bg_white">
-           
+
             <p> 여행지 정보와 관련 동영상을 한번에<br>검색할 수 있는 페이지입니다.</p>
             <div class="option">
                 <div>
@@ -731,7 +732,7 @@
             var sw = new kakao.maps.LatLng(33.691104, 127.050904),
                 ne = new kakao.maps.LatLng(33.001647, 126.079987);
             var sbounds = new kakao.maps.LatLngBounds(sw, ne);
-            
+
             if (!keyword.replace(/^\s+|\s+$/g, '')) {
                 alert('키워드를 입력해주세요!');
                 return false;
@@ -743,7 +744,7 @@
             });
 
             placesLists2.innerHTML = ""
-            
+
             //유튜브 검색함수
             fnGetList(keyword);
 
@@ -1134,9 +1135,9 @@
             $("#get_view").empty();
             $("#nav_view").empty();
 
-            var sTargetUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&order=relevance&location=33.447037,126.6652511&locationRadius=10mi&type=video"
-                + "&q=" + 에코랜드 + "&key=AIzaSyAWWYpPOZdm1uzZcPIWGb8G620gzzbaMJA" ;
-            alert (StargetUrl);
+            var sTargetUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&order=relevance"
+                + "&q=" + title + "&key=AIzaSyAWWYpPOZdm1uzZcPIWGb8G620gzzbaMJA" + "&maxResults=30";
+
             $.ajax({
                 type: "POST",
                 url: sTargetUrl,
