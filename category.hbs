@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>지도 생성하기</title>
+    <h1>YOUTRIP</h1>
+    <style>
+        body {
+            background-color: #9dbad1;
+        }
+
+        h1 {
+            font-size: 35px;
+            font-family: 'Jeju Hallasan', cursive;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- 네비게이션 바ㅜ -->
+    <style>
+        body {
+            margin: 0;
+        }
+
+        ul.topnav {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        ul.topnav li {
+            float: left;
+        }
+
+        ul.topnav li a {
+            display: inline-block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            transition: 0.3s;
+            font-size: 17px;
+            font-family: 'Jeju Hallasan', cursive;
+        }
+
+        ul.topnav li a:hover {
+            background-color: #111;
+        }
+
+        ul.topnav li.icon {
+            display: none;
+        }
+
+        @media screen and (max-width:680px) {
+            ul.topnav li:not(:first-child) {
+                display: none;
+            }
+
+            ul.topnav li.icon {
+                float: right;
+                display: inline-block;
+            }
+        }
+
+        @media screen and (max-width:680px) {
+            ul.topnav.responsive {
+                position: relative;
+            }
+
+            ul.topnav.responsive li.icon {
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+
+            ul.topnav.responsive li {
+                float: none;
+                display: inline;
+            }
+
+            ul.topnav.responsive li a {
+                display: block;
+                text-align: left;
+            }
+        }
+    </style>
+
+
+    </head>
+
+    <body>
+
+        <ul class="topnav">
+            <li><a class="active" href='./index'>Home</a></li>
+            <li><a href='./about'>ABOUT</a></li>
+            <li><a href='./search'>지도검색</a></li>
+            <li><a href='./category'>카테고리검색</a></li>
+            <li><a href='./navi'>경로겸색?</a></li>
+            <li><a href='./neardes'>주변검색</a></li>
+
+            <li class="icon">
+                <a href="javascript:void(0);" style="font-size:15px;" onclick="myFunction()">☰</a>
+            </li>
+        </ul>
+
+        <script>
+            function myFunction() {
+                document.getElementsByClassName("topnav")[0].classList.toggle("responsive");
+            }
+        </script>
+        <!-- 네비게이션 바ㅗ -->
+        <style>
+            @import url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
+            @import url(//fonts.googleapis.com/earlyaccess/jejuhallasan.css);
+            @import url(//fonts.googleapis.com/earlyaccess/jejumyeongjo.css);
+
+            .bg_white {
+                background: #fff;
+            }
+
+            .map_wrap,
+            .map_wrap * {
+                margin: 0;
+                padding: 0;
+                font-family: 'Jeju Gothic', dotum, '돋움', sans-serif;
+                font-size: 12px;
+            }
+
+            .map_wrap a,
+            .map_wrap a:hover,
+            .map_wrap a:active {
+                color: #000;
+                text-decoration: none;
+            }
+
+            .map_wrap {
+                position: relative;
+                width: 100%;
+                height: 750px;
+            }
+
+            #menu_wrap {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 280px;
+                margin: 10px 0 30px 10px;
+                padding: 10px;
+                overflow-y: auto;
+                background: rgba(255, 255, 255, 0.7);
+                z-index: 1;
+                font-size: 25px;
+            }
+
+            #menu_wrap hr {
+                display: block;
+                height: 1px;
+                border: 0;
+                border-top: 2px solid #5F5F5F;
+                margin: 3px 0;
+            }
+            #menu_wrap p {
+            padding: 5px 0px;
+            font-size: 15px;
+            font-family: 'Jeju Hallasan', sans-serif;
+            text-align: center;
+        }
+          
+            #menu_wrap .categorybtn input {
+                text-align: center;
+                font-size: 15px;
+                width: 60px;
+                margin: 5px;
+                background-color: rgba(255, 255, 255, 0.7);
+                font-family: 'Jeju Gothic', cursive;
+            }
+
+            #youtube_wrap {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: 300px;
+                margin: 10px 0 30px 10px;
+                padding: 10px;
+                overflow-y: auto;
+                background: rgba(255, 255, 255, 0.7);
+                z-index: 1;
+            }
+
+           
+            /*버튼 클릭하면 나오는 정보*/
+
+            #detailList item {
+                margin: 6px;
+                padding: 6px;
+                background: #fff;
+                border-radius: 10px;
+                display: block;
+                border-bottom: 1px solid #888;
+            }
+
+            #detailList item .title {
+                color: black;
+                font-size: 17px;
+                font-family: 'Jeju Gothic', cursive;
+                font-weight: bold;
+            }
+
+            #detailList item .addr1 {
+                color: #666;
+            }
+
+            #detailLists item .tel {
+                color: #999;
+            }
+
+            #detailLists item img {
+                width: 100%;
+            }
+
+
+
+
+            /*-------ㅜ-----최종 출력하는 곳-상세한 정보(운영시간, 주차공간 등)*/
+
+
+
+            #placesLists2 item .title {
+                color: black;
+                font-size: 30px;
+                font-family: 'Jeju Hallasan', cursive;
+                font-weight: bold;
+            }
+
+            #placesLists2 item .addr1 {
+                color: #666;
+                font-size: 20px;
+                font-weight: bold;
+                font-family: 'Jeju Gothic', sans-serif;
+            }
+
+            #placesLists2 item .tel {
+                color: #999;
+                font-size: 15px;
+                text-align: right;
+                font-weight: bold;
+                font-family: 'Jeju Gothic', sans-serif;
+            }
+
+            #placesLists2 item img {
+                width: 100%;
+            }
+
+
+            #placesLists2 {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: 300px;
+                padding: 10px;
+                overflow-y: auto;
+
+                z-index: 1;
+            }
+
+            #placesLists2 item {
+                margin: 6px;
+                padding: 6px;
+
+                border-radius: 10px;
+                display: block;
+                font-family: 'Jeju Gothic', cursive;
+            }
+
+            #placesLists2 item .accomcountleports {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .expagerangeleports {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .infocenterleports {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .openperiod {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .parkingleports {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .reservation {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .restdateleports {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .scaleleports {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .usefeeleports {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .usetimeleports {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+
+
+            #placesLists2 item .chkpetshopping {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .fairday {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .infocentershopping {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .opendateshopping {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .opentime {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .parkingshopping {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .restdateshopping {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .saleitem {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .saleitemcost {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .shopguide {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+
+
+
+            #placesLists2 item .firstmenu {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .infocenterfood {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .opendatefood {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .opentimefood {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .packing {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .parkingfood {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .reservationfood {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .restdatefood {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .scalefood {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+
+            #placesLists2 item .treatmenu {
+                font-weight: bold;
+                margin-bottom: 2px;
+                font-size: 15px;
+            }
+        </style>
+
+        <div class="map_wrap">
+            <div id="map" style="width:100%;height:100%;position:relative;overflow:scroll;"></div>
+
+            <div id="menu_wrap" class="bg_white">
+                 <p>카테고리별로 검색할 수 있는 페이지입니다.</p>
+                <div class="categorybtn">
+                    <div>
+                        <form>                          
+
+                            <style>
+                                #category button {
+                                    border: 0;
+                                    outline: 0;
+                                    background-color: #ffffff;
+                                    background-color: rgba(255, 255, 255, 0)
+                                }
+                                #category button:hover {
+                                    color: white;
+                                    background-color: skyblue;
+                                }
+                            </style>
+
+                            <div id = "category">
+                                <!-- <input type='BUTTON' value='음식점' onclick='food()'>
+                                <input type='BUTTON' value='쇼핑' onclick='shopping()'>
+                                <input type='BUTTON' value='레포츠' onclick='sport()'> -->
+                                <button type = "button" id="" onclick = 'food()' >
+                                    <img src = "https://user-images.githubusercontent.com/59672611/80338855-5b83eb00-8898-11ea-9a61-f7c1cd0ace23.png" width=35px;>
+                                    음식점
+                                </button>
+                                <button type = "button" id="" onclick = 'shopping()' >
+                                    <img src = "https://user-images.githubusercontent.com/59672611/80340326-65f3b400-889b-11ea-8946-89976f1e38df.png" width=65px;>
+                                    쇼핑
+                                </button>
+                                <button type = "button" id="" onclick = 'sport()' >
+                                    <img src = "https://user-images.githubusercontent.com/59672611/80340320-64c28700-889b-11ea-9d6c-d0287652d507.png" width=45px;>
+                                    레포츠
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <hr>
+                <ul id="detailList"></ul>
+            </div>
+            <div id="youtube_wrap" class="bg_white">
+
+                <ul id="placesLists2"></ul>
+                
+            </div>
+
+            <!-- 지도를 표시할 div 입니다 -->
+            <div id="map" style="width:100%;height:750px;"></div>
+
+            <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5a6b4e5b0845903f4703ff9bc47275f2&libraries=services,clusterer"></script>
+            <script>
+                var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+                    mapOption = {
+                        center: new kakao.maps.LatLng(33.402653, 126.581539), // 지도의 중심좌표
+                        level: 9 // 지도의 확대 레벨
+                    };
+
+                // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+                var map = new kakao.maps.Map(mapContainer, mapOption);
+                var marker_arr = [];
+
+                // 클러스터 생성
+                var clusterer = new kakao.maps.MarkerClusterer({
+                   map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
+                   averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
+                   minLevel: 6 // 클러스터 할 최소 지도 레벨 
+               });
+
+                function food() {
+                    removeMarker2();
+                    clusterer.clear();
+                    map.setLevel(9);
+                    map.setCenter(new kakao.maps.LatLng(33.402653, 126.581539));
+
+                    var xhr = new XMLHttpRequest();
+                    var url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList'; /*URL*/
+                    var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + '8a0A17zptKOqfQfCcatkNu2PXiLPByX96Dm%2FFmSBUQGh8c%2Ft6LQGzSKo16tWo%2BfyRj%2F%2FdqEdcfCqaT4Op8gU2Q%3D%3D'; /*Service Key*/
+                    queryParams += '&' + encodeURIComponent('arrange') + '=' + encodeURIComponent('A');// 정렬구분 -제목순
+                    queryParams += '&' + encodeURIComponent('contentTypeId') + '=' + encodeURIComponent('39'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
+                    queryParams += '&' + encodeURIComponent('areaCode') + '=' + encodeURIComponent('39'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
+                    queryParams += '&' + encodeURIComponent('MobileOS') + '=' + encodeURIComponent('ETC'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
+                    queryParams += '&' + encodeURIComponent('MobileApp') + '=' + encodeURIComponent('YOUTRIP'); /*서비스명=어플명*/
+                    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('200');
+                    queryParams += '&' + encodeURIComponent('_type') + '=' + encodeURIComponent('json');
+
+                    xhr.open("GET", url + queryParams);
+                    xhr.onreadystatechange = callFunction;
+                    
+                    function callFunction() {
+                        if (xhr.readyState == 4) {       ///수신완료
+                            var text = this.responseText;
+                            var o = JSON.parse(text)
+                            var food = o.response.body.items.item
+                            detailList.innerHTML = ""
+
+                                
+                            for (var i = 0; i < food.length; i++) {
+
+                                // 마커생성
+                                var latlng_food = new Array();
+                                latlng_food[i] = new kakao.maps.LatLng(food[i].mapy, food[i].mapx);
+                                var imageSrc = "https://user-images.githubusercontent.com/59672611/80338855-5b83eb00-8898-11ea-9a61-f7c1cd0ace23.png";
+                                var imageSize = new kakao.maps.Size(24, 40);
+                                var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+                                marker_food = new kakao.maps.Marker({
+                                    map: map,
+                                    position: latlng_food[i],
+                                    image: markerImage,
+                                    clickable: true
+                                });                             
+                                marker_arr.push(marker_food);
+                                
+                                // 인포윈도우 생성
+                                var iw_food = new Array();
+                                iw_food[i] = food[i].title;
+
+                                var info_food = new kakao.maps.InfoWindow({
+                                    position: latlng_food[i],
+                                    content: '<span class="left"></span><span class="center", style="white-space: nowrap; font-size: 20px; text-align: center;">' + iw_food[i] + '</span><span class="right"></span>'
+                                    //content: iw_food[i]
+                                });
+
+                                (function (marker_food, info_food) {
+                                    // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다 
+                                    kakao.maps.event.addListener(marker_food, 'mouseover', function () {
+                                        info_food.open(map, marker_food);
+                                    });
+
+                                    // 마커에 mouseout 이벤트를 등록하고 마우스 아웃 시 인포윈도우를 닫습니다
+                                    kakao.maps.event.addListener(marker_food, 'mouseout', function () {
+                                        info_food.close();
+                                    });
+
+                                    kakao.maps.event.addListener(marker_food, 'click', function () {
+
+                                        var latlng_food = marker_food.getPosition();
+                                        const lat_food = latlng_food.getLat();
+                                        const lng_food = latlng_food.getLng();
+                                        clickcategory(lng_food, lat_food);
+                                    });
+                                })(marker_food, info_food);
+
+                                var div = document.createElement('item');
+                                var s = ""
+
+                                if (food[i].firstimage != null) s += "<img class='firstimage' src='" + food[i].firstimage + "' width='240px'/>"
+                                if (food[i].title != null) s += "<div class='title'>" + food[i].title + "</div>"
+                                if (food[i].addr1 != null) s += "<div class='addr1'>" + food[i].addr1 + "</div>"
+                                if (food[i].tel != null) s += "<div class='tel'>" + food[i].tel + "</div>"
+                                div.innerHTML = s;
+
+                                detailList.appendChild(div);
+                            }
+                            clusterer.addMarkers(marker_arr)
+                        }
+                    };
+
+                    xhr.send('');
+                }
+
+                function shopping() {
+                    removeMarker2();
+                    clusterer.clear();
+                    map.setLevel(9);
+                    map.setCenter(new kakao.maps.LatLng(33.402653, 126.581539));
+
+                    var xhr = new XMLHttpRequest();
+                    var url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList'; /*URL*/
+                    var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + '8a0A17zptKOqfQfCcatkNu2PXiLPByX96Dm%2FFmSBUQGh8c%2Ft6LQGzSKo16tWo%2BfyRj%2F%2FdqEdcfCqaT4Op8gU2Q%3D%3D'; /*Service Key*/
+                    queryParams += '&' + encodeURIComponent('arrange') + '=' + encodeURIComponent('A');// 정렬구분 -제목순
+                    queryParams += '&' + encodeURIComponent('contentTypeId') + '=' + encodeURIComponent('38'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
+                    queryParams += '&' + encodeURIComponent('areaCode') + '=' + encodeURIComponent('39'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
+                    queryParams += '&' + encodeURIComponent('MobileOS') + '=' + encodeURIComponent('ETC'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
+                    queryParams += '&' + encodeURIComponent('MobileApp') + '=' + encodeURIComponent('YOUTRIP'); /*서비스명=어플명*/
+                    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('200');
+                    queryParams += '&' + encodeURIComponent('_type') + '=' + encodeURIComponent('json');
+
+                    xhr.open("GET", url + queryParams);
+                    xhr.onreadystatechange = callFunction;
+
+                    function callFunction() {
+                        if (xhr.readyState == 4) {       ///수신완료
+                            var text = this.responseText;
+                            var o = JSON.parse(text)
+                            var food = o.response.body.items.item
+                            detailList.innerHTML = ""
+
+                            for (var i = 0; i < food.length; i++) {
+                                // 마커생성
+                                var latlng_food = new Array();
+                                latlng_food[i] = new kakao.maps.LatLng(food[i].mapy, food[i].mapx);
+                                var imageSrc = "https://user-images.githubusercontent.com/59672611/80340326-65f3b400-889b-11ea-8946-89976f1e38df.png";
+                                var imageSize = new kakao.maps.Size(35, 35);
+                                var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+                                marker_food = new kakao.maps.Marker({
+                                    map: map,
+                                    position: latlng_food[i],
+                                    image: markerImage,
+                                    clickable: true
+                                });
+                                marker_arr.push(marker_food);
+
+                                // 인포윈도우 생성
+                                var iw_food = new Array();
+                                iw_food[i] = food[i].title;
+
+                                var info_food = new kakao.maps.InfoWindow({
+                                    position: latlng_food[i],
+                                    content: '<span class="left"></span><span class="center", style="white-space: nowrap; font-size: 20px; text-align: center;">' + iw_food[i] + '</span><span class="right"></span>'
+                                    //content: iw_food[i]
+                                });
+
+                                (function (marker_food, info_food) {
+                                    // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다 
+                                    kakao.maps.event.addListener(marker_food, 'mouseover', function () {
+                                        info_food.open(map, marker_food);
+                                    });
+
+                                    // 마커에 mouseout 이벤트를 등록하고 마우스 아웃 시 인포윈도우를 닫습니다
+                                    kakao.maps.event.addListener(marker_food, 'mouseout', function () {
+                                        info_food.close();
+                                    });
+
+                                    kakao.maps.event.addListener(marker_food, 'click', function () {
+
+                                        var latlng_food = marker_food.getPosition();
+                                        const lat_food = latlng_food.getLat();
+                                        const lng_food = latlng_food.getLng();
+                                        clickcategory(lng_food, lat_food);
+                                    });
+                                })(marker_food, info_food);
+
+                                var div = document.createElement('item');
+                                var s = ""
+
+                                if (food[i].firstimage != null) s += "<img class='firstimage' src='" + food[i].firstimage + "' width='240px'/>"
+                                if (food[i].title != null) s += "<div class='title'>" + food[i].title + "</div>"
+                                if (food[i].addr1 != null) s += "<div class='addr1'>" + food[i].addr1 + "</div>"
+                                if (food[i].tel != null) s += "<div class='tel'>" + food[i].tel + "</div>"
+                                div.innerHTML = s;
+
+                                detailList.appendChild(div);
+                            }
+                            clusterer.addMarkers(marker_arr)
+                        }
+
+                    };
+                    xhr.send('');
+                }
+                function sport() {
+                    removeMarker2();
+                    clusterer.clear();
+                    map.setLevel(9);
+                    map.setCenter(new kakao.maps.LatLng(33.402653, 126.581539));
+                    
+                    var xhr = new XMLHttpRequest();
+                    var url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList'; /*URL*/
+                    var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + '8a0A17zptKOqfQfCcatkNu2PXiLPByX96Dm%2FFmSBUQGh8c%2Ft6LQGzSKo16tWo%2BfyRj%2F%2FdqEdcfCqaT4Op8gU2Q%3D%3D'; /*Service Key*/
+                    queryParams += '&' + encodeURIComponent('arrange') + '=' + encodeURIComponent('A');// 정렬구분 -제목순
+                    queryParams += '&' + encodeURIComponent('contentTypeId') + '=' + encodeURIComponent('28'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
+                    queryParams += '&' + encodeURIComponent('areaCode') + '=' + encodeURIComponent('39'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
+                    queryParams += '&' + encodeURIComponent('MobileOS') + '=' + encodeURIComponent('ETC'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
+                    queryParams += '&' + encodeURIComponent('MobileApp') + '=' + encodeURIComponent('YOUTRIP'); /*서비스명=어플명*/
+                    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('200');
+                    queryParams += '&' + encodeURIComponent('_type') + '=' + encodeURIComponent('json');
+
+                    xhr.open("GET", url + queryParams);
+                    xhr.onreadystatechange = callFunction;
+
+                    function callFunction() {
+                        if (xhr.readyState == 4) {       ///수신완료
+                            var text = this.responseText;
+                            var o = JSON.parse(text)
+                            var food = o.response.body.items.item
+                            detailList.innerHTML = ""
+
+
+                            for (var i = 0; i < food.length; i++) {
+                                // 마커생성
+                                var latlng_food = new Array();
+                                latlng_food[i] = new kakao.maps.LatLng(food[i].mapy, food[i].mapx);
+                                var imageSrc = "https://user-images.githubusercontent.com/59672611/80340320-64c28700-889b-11ea-9d6c-d0287652d507.png";
+                                var imageSize = new kakao.maps.Size(24, 40);
+                                var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+                                marker_food = new kakao.maps.Marker({
+                                    map: map,
+                                    position: latlng_food[i],
+                                    image: markerImage,
+                                    clickable: true
+                                });
+                                marker_arr.push(marker_food);
+
+                                // 인포윈도우 생성
+                                var iw_food = new Array();
+                                iw_food[i] = food[i].title;
+
+                                var info_food = new kakao.maps.InfoWindow({
+                                    position: latlng_food[i],
+                                    content: '<span class="left"></span><span class="center", style="white-space: nowrap; font-size: 20px; text-align: center;">' + iw_food[i] + '</span><span class="right"></span>'
+                                    //content: iw_food[i]
+                                });
+
+                                (function (marker_food, info_food) {
+                                    // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다 
+                                    kakao.maps.event.addListener(marker_food, 'mouseover', function () {
+                                        info_food.open(map, marker_food);
+                                    });
+
+                                    // 마커에 mouseout 이벤트를 등록하고 마우스 아웃 시 인포윈도우를 닫습니다
+                                    kakao.maps.event.addListener(marker_food, 'mouseout', function () {
+                                        info_food.close();
+                                    });
+
+                                    kakao.maps.event.addListener(marker_food, 'click', function () {
+
+                                        var latlng_food = marker_food.getPosition();
+                                        const lat_food = latlng_food.getLat();
+                                        const lng_food = latlng_food.getLng();
+                                        clickcategory(lng_food, lat_food);
+                                    });
+                                })(marker_food, info_food);
+
+                                var div = document.createElement('item');
+                                var s = ""
+
+                                if (food[i].firstimage != null) s += "<img class='firstimage' src='" + food[i].firstimage + "' width='240px'/>"
+                                if (food[i].title != null) s += "<div class='title'>" + food[i].title + "</div>"
+                                if (food[i].addr1 != null) s += "<div class='addr1'>" + food[i].addr1 + "</div>"
+                                if (food[i].tel != null) s += "<div class='tel'>" + food[i].tel + "</div>"
+                                div.innerHTML = s;
+
+                                detailList.appendChild(div);
+                            }
+                            clusterer.addMarkers(marker_arr)
+
+                        }
+
+                    };
+
+                    xhr.send('');
+                }
+                // 지도 위에 표시되고 있는 주변 여행지 마커를 모두 제거합니다
+
+                function clickcategory(lng, lat) {
+
+                    var xhr = new XMLHttpRequest();
+                    var url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList'; /*URL*/
+                    var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + '8a0A17zptKOqfQfCcatkNu2PXiLPByX96Dm%2FFmSBUQGh8c%2Ft6LQGzSKo16tWo%2BfyRj%2F%2FdqEdcfCqaT4Op8gU2Q%3D%3D'; /*Service Key*/
+                    queryParams += '&' + encodeURIComponent('mapX') + '=' + lng; /*좌표 X*/
+                    queryParams += '&' + encodeURIComponent('mapY') + '=' + lat; /*좌표 Y*/
+                    queryParams += '&' + encodeURIComponent('radius') + '=' + encodeURIComponent('5000'); /*좌표 X*/
+                    queryParams += '&' + encodeURIComponent('arrange') + '=' + encodeURIComponent('E');// 정렬구분 -제목순
+                    queryParams += '&' + encodeURIComponent('MobileOS') + '=' + encodeURIComponent('ETC'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
+                    queryParams += '&' + encodeURIComponent('MobileApp') + '=' + encodeURIComponent('YOUTRIP'); /*서비스명=어플명*/
+                    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('200');
+                    queryParams += '&' + encodeURIComponent('_type') + '=' + encodeURIComponent('json');
+
+                    xhr.open("GET", url + queryParams);
+                    xhr.onreadystatechange = callFunction;
+
+                    function callFunction() {
+                        if (xhr.readyState == 4) {       ///수신완료
+                            var text = this.responseText;
+
+                            var o = JSON.parse(text)
+                            var a = o.response.body.items.item
+
+                           
+
+                            var div = document.createElement('item');
+                            var s = ""
+
+                            if (a[0].firstimage != null) s += "<img class='firstimage' src='" + a[0].firstimage + "' width='240px'/>"
+                            if (a[0].title != null) s += "<div class='title'>" + a[0].title + "</div>"
+                            if (a[0].addr1 != null) s += "<div class='addr1'>" + a[0].addr1 + "</div>"
+                            if (a[0].tel != null) s += "<div class='tel'>" + a[0].tel + "</div>"
+                            div.innerHTML = s;
+
+                           
+
+
+                            var contentid = a[0].contentid;
+                            var contenttypeid = a[0].contenttypeid;
+                            //alert(contenttypeid);
+                            detailcategory(contentid, contenttypeid, div);
+                        }
+                    };
+
+                    xhr.send('');
+                }
+
+                function detailcategory(contentid, contenttypeid, div) {
+
+                    var xxhr = new XMLHttpRequest();
+                    var uurl = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailIntro'; /*URL*/
+                    var qqueryParams = '?' + encodeURIComponent('ServiceKey') + '=' + '8a0A17zptKOqfQfCcatkNu2PXiLPByX96Dm%2FFmSBUQGh8c%2Ft6LQGzSKo16tWo%2BfyRj%2F%2FdqEdcfCqaT4Op8gU2Q%3D%3D'; /*Service Key*/
+                    qqueryParams += '&' + encodeURIComponent('contentId') + '=' + contentid;
+                    qqueryParams += '&' + encodeURIComponent('contentTypeId') + '=' + contenttypeid;
+                    qqueryParams += '&' + encodeURIComponent('MobileOS') + '=' + encodeURIComponent('ETC'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
+                    qqueryParams += '&' + encodeURIComponent('MobileApp') + '=' + encodeURIComponent('YOUTRIP'); /*서비스명=어플명*/
+                    qqueryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('200');
+                    qqueryParams += '&' + encodeURIComponent('_type') + '=' + encodeURIComponent('json');
+
+                    xxhr.open("GET", uurl + qqueryParams);
+                    xxhr.onreadystatechange = ccallFunction;
+
+                    function ccallFunction() {
+                        if (xxhr.readyState == 4) {       ///수신완료
+                            var text2 = this.responseText;
+
+                            var o2 = JSON.parse(text2)
+                            var a2 = o2.response.body.items.item
+                            placesLists2.innerHTML = ""
+
+                            var div2 = document.createElement('item');
+                            var s2 = ""
+
+                            if (a2.accomcountleports != null) s2 += "<div class='accomcountleports'>" + "수용인원: " + a2.accomcountleports + "</div>"
+                            if (a2.expagerangeleports != null) s2 += "<div class='expagerangeleports'>" + "체험 가능연령: " + a2.expagerangeleports + "</div>"
+                            if (a2.infocenterleports != null) s2 += "<div class='infocenterleports'>" +"문의 및 안내: " + a2.infocenterleports + "</div>"
+                            if (a2.openperiod != null) s2 += "<div class='openperiod'>" + "개장시간: " + a2.openperiod + "</div>"
+                            if (a2.parkingleports != null) s2 += "<div class='parkingleports'>" + "주차시설: " + a2.parkingleports + "</div>"
+                            if (a2.reservation != null) s2 += "<div class='reservation'>" + "예약안내: " + a2.reservation + "</div>"
+                            if (a2.restdateleports != null) s2 += "<div class='restdateleports'>" + "쉬는날: " + a2.restdateleports + "</div>"
+                            if (a2.scaleleports != null) s2 += "<div class='scaleleports'>" + "규모: " + a2.scaleleports + "</div>"
+                            if (a2.usefeeleports != null) s2 += "<div class='usefeeleports'>" + "입장료: " + a2.usefeeleports + "</div>"
+                            if (a2.usetimeleports != null) s2 += "<div class='usetimeleports'>" + "이용시간: " + a2.usetimeleports + "</div>"
+
+
+
+                            if (a2.chkpetshopping != null) s2 += "<div class='chkpetshopping'>" + "애완동물 동반가능 정보: " + a2.chkpetshopping + "</div>"
+                            if (a2.fairday != null) s2 += "<div class='fairday'>" + "장서는 날: " + a2.fairday + "</div>"
+                            if (a2.infocentershopping != null) s2 += "<div class='infocentershopping'>" + "" + a2.infocentershopping + "</div>"
+                            if (a2.opendateshopping != null) s2 += "<div class='opendateshopping'>" + "개장일: " + a2.opendateshopping + "</div>"
+                            if (a2.opentime != null) s2 += "<div class='opentime'>" + "영업시간: " + a2.opentime + "</div>"
+                            if (a2.parkingshopping != null) s2 += "<div class='parkingshopping'>" + "주차시설: " + a2.parkingshopping + "</div>"
+                            if (a2.restdateshopping != null) s2 += "<div class='restdateshopping'>" + "쉬는날: " + a2.restdateshopping + "</div>"
+                            if (a2.saleitem != null) s2 += "<div class='saleitem'>" + "판매 품목: " + a2.saleitem + "</div>"
+                            if (a2.saleitemcost != null) s2 += "<div class='saleitemcost'>" + "판매 품목별 가격: " + a2.saleitemcost + "</div>"
+                            if (a2.shopguide != null) s2 += "<div class='shopguide'>" + "매장안내: " + a2.shopguide + "</div>"
+
+
+
+                            if (a2.firstmenu != null) s2 += "<div class='firstmenu'>" + "대표 메뉴: " + a2.firstmenu + "</div>"
+                            if (a2.infocenterfood != null) s2 += "<div class='infocenterfood'>" + "문의 및 안내: " + a2.infocenterfood + "</div>"
+                            if (a2.opendatefood != null) s2 += "<div class='opendatefood'>" + "개업일: " + a2.opendatefood + "</div>"
+                            if (a2.opentimefood != null) s2 += "<div class='opentimefood'>" + "영업시간: " + a2.opentimefood + "</div>"
+                            if (a2.packing != null) s2 += "<div class='packing'>" + "포장 가능 정보: " + a2.packing + "</div>"
+                            if (a2.parkingfood != null) s2 += "<div class='parkingfood'>" + "주차시설: " + a2.parkingfood + "</div>"
+                            if (a2.reservationfood != null) s2 += "<div class='reservationfood'>" + "예약안내: " + a2.reservationfood + "</div>"
+                            if (a2.restdatefood != null) s2 += "<div class='restdatefood'>" + "쉬는날: " + a2.restdatefood + "</div>"
+                            if (a2.scalefood != null) s2 += "<div class='scalefood'>" + "규모: " + a2.scalefood + "</div>"
+                            if (a2.treatmenu != null) s2 += "<div class='treatmenu'>" + "취급 메뉴: " + a2.treatmenu + "</div>"
+
+
+                            div2.innerHTML = s2;
+                            placesLists2.appendChild(div);
+                            placesLists2.appendChild(div2);
+                        }
+                    };
+                    xxhr.send('');
+
+                }
+                // 지도 위에 표시되고 있는 주변 여행지 마커를 모두 제거합니다
+                function removeMarker2() {
+                    for (var k = 0; k < marker_arr.length; k++) {
+                        marker_arr[k].setMap(null);
+                    }
+                    marker_arr = [];
+                }
+            </script>
+    </body>
+
+</html>

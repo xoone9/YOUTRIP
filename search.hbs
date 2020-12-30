@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>키워드로 장소검색하고 목록으로 표출하기</title>
+    <h1>YOUTRIP</h1>
+    <style>
+        body {
+            background-color: #9dbad1;
+        }
+
+        h1 {
+            font-size: 35px;
+            font-family: 'Jeju Hallasan', cursive;
+        }
+    </style>
+
+
+    <!-- 네비게이션 바ㅜ -->
+    <style>
+        body {
+            margin: 0;
+        }
+
+        ul.topnav {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        ul.topnav li {
+            float: left;
+        }
+
+        ul.topnav li a {
+            display: inline-block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            transition: 0.3s;
+            font-size: 17px;
+            font-family: 'Jeju Hallasan', cursive;
+        }
+
+        ul.topnav li a:hover {
+            background-color: #111;
+        }
+
+        ul.topnav li.icon {
+            display: none;
+        }
+
+        @media screen and (max-width:680px) {
+            ul.topnav li:not(:first-child) {
+                display: none;
+            }
+
+            ul.topnav li.icon {
+                float: right;
+                display: inline-block;
+            }
+        }
+
+        @media screen and (max-width:680px) {
+            ul.topnav.responsive {
+                position: relative;
+            }
+
+            ul.topnav.responsive li.icon {
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+
+            ul.topnav.responsive li {
+                float: none;
+                display: inline;
+            }
+
+            ul.topnav.responsive li a {
+                display: block;
+                text-align: left;
+            }
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <ul class="topnav">
+        <li><a class="active" href='./index'>Home</a></li>
+        <li><a href='./about'>ABOUT</a></li>
+        <li><a href='./search'>지도검색</a></li>
+        <li><a href='./category'>카테고리검색</a></li>
+        <li><a href='./navi'>경로겸색?</a></li>
+        <li><a href='./neardes'>주변검색</a></li>
+        <li class="icon">
+            <a href="javascript:void(0);" style="font-size:15px;" onclick="myFunction()">☰</a>
+        </li>
+    </ul>
+
+    <script>
+        function myFunction() {
+            document.getElementsByClassName("topnav")[0].classList.toggle("responsive");
+        }
+    </script>
+    <!-- 네비게이션 바ㅗ -->
+
+    <style>
+        @import url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
+        @import url(//fonts.googleapis.com/earlyaccess/jejuhallasan.css);
+        @import url(//fonts.googleapis.com/earlyaccess/jejumyeongjo.css);
+         @import url(//fonts.googleapis.com/earlyaccess/nanumpenscript.css);
+        .map_wrap,
+        .map_wrap * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Jeju Gothic', dotum, '돋움', sans-serif;
+            font-size: 12px;
+        }
+
+        .map_wrap a,
+        .map_wrap a:hover,
+        .map_wrap a:active {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .map_wrap {
+            position: relative;
+            width: 100%;
+            height: 750px;
+        }
+
+        #menu_wrap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 280px;
+            margin: 10px 0 30px 10px;
+            padding: 10px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.7);
+            z-index: 1;
+            font-size: 25px;
+        }
+
+        .bg_white {
+            background: #fff;
+        }
+
+        #menu_wrap hr {
+
+            display: block;
+            height: 1px;
+            border: 0;
+            border-top: 2px solid #5F5F5F;
+            margin: 3px 0;
+        }
+
+      
+
+        #menu_wrap .option {
+            text-align: center;
+        }
+
+        #menu_wrap .option input {
+            font-size: 16px;
+            width: 170px;
+            height: 27px;
+           
+        }
+
+        #menu_wrap p {
+            padding: 5px 0px;
+            font-size: 15px;
+            font-family: 'Jeju Hallasan', sans-serif;
+            text-align: center;
+        }
+
+        #menu_wrap .option button {
+            padding: 5px 13px;
+            margin-left: 5px;
+            font-size: 13px;
+        }
+
+        #placesList li {
+            list-style: none;
+            margin: 6px;
+            padding: 6px;
+            background: #fff;
+            border-radius: 10px;
+            display: block;
+        }
+
+        #placesList .item {
+            position: relative;
+            border-bottom: 1px solid #888;
+            overflow: hidden;
+            cursor: pointer;
+            min-height: 65px;
+        }
+
+        #placesList .item span {
+            display: block;
+            margin-top: 4px;
+        }
+
+        #placesList .item h5,
+        #placesList .item .info {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #placesList .item .info {
+            padding: 10px 0 10px 55px;
+        }
+
+        #placesList .info .gray {
+            color: #8a8a8a;
+        }
+
+        #placesList .info .jibun {
+            padding-left: 26px;
+            background: url(http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
+        }
+
+        #placesList .info .tel {
+            color: #009900;
+        }
+
+        #placesList .item .markerbg {
+            float: left;
+            position: absolute;
+            width: 36px;
+            height: 37px;
+            margin: 10px 0 0 10px;
+            background: url(http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;
+        }
+
+        #placesList .item .marker_1 {
+            background-position: 0 -10px;
+        }
+
+        #placesList .item .marker_2 {
+            background-position: 0 -56px;
+        }
+
+        #placesList .item .marker_3 {
+            background-position: 0 -102px
+        }
+
+        #placesList .item .marker_4 {
+            background-position: 0 -148px;
+        }
+
+        #placesList .item .marker_5 {
+            background-position: 0 -194px;
+        }
+
+        #placesList .item .marker_6 {
+            background-position: 0 -240px;
+        }
+
+        #placesList .item .marker_7 {
+            background-position: 0 -286px;
+        }
+
+        #placesList .item .marker_8 {
+            background-position: 0 -332px;
+        }
+
+        #placesList .item .marker_9 {
+            background-position: 0 -378px;
+        }
+
+        #placesList .item .marker_10 {
+            background-position: 0 -423px;
+        }
+
+        #placesList .item .marker_11 {
+            background-position: 0 -470px;
+        }
+
+        #placesList .item .marker_12 {
+            background-position: 0 -516px;
+        }
+
+        #placesList .item .marker_13 {
+            background-position: 0 -562px;
+        }
+
+        #placesList .item .marker_14 {
+            background-position: 0 -608px;
+        }
+
+        #placesList .item .marker_15 {
+            background-position: 0 -654px;
+        }
+
+        #placesLists2 li {
+            list-style: none;
+        }
+
+        #placesLists2 item {
+            padding: 6px;
+            border-radius: 10px;
+            display: block;
+            background-color: #fff;
+        }
+
+        #placesLists2 item .contentid {
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        #placesLists2 item .title {
+            color: black;
+            font-size: 30px;
+            text-align: center;
+            font-weight: bold;
+            font-family: 'Jeju Hallasan', cursive;
+        }
+
+        #placesLists2 item .addr1 {
+            color: #999;
+            font-size: 20px;
+            font-weight: bold;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .tel {
+            color: #999;
+            font-size: 15px;
+            text-align: right;
+            font-weight: bold;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .overview {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item img {
+            width: 100%;
+        }
+
+
+        #placesLists2 item .expagerange {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .expguide {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .heritage1 {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .heritage2 {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .heritage3 {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .infocenter {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .opendate {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .parking {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .restdate {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .useseason {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .usetime {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+
+
+        #placesLists2 item .discountinfo {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .infocenterculture {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .parkingculture {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .restdateculture {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .usefee {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .usetimeculture {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .scale {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .spendtime {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+
+        #placesLists2 item .agelimit {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .bookingplace {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .discountinfofestival {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .eventenddate {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .eventhomepage {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .eventplace {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .eventstartdate {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .festivalgrade {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .placeinfo {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .playtime {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .program {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .spendtimefestival {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .sponsor1 {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .sponsor1tel {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .sponsor2 {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .sponsor2tel {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .subevent {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .usetimefestival {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+
+
+
+        #placesLists2 item .distance {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .infocentertourcourse {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .schedule {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .taketime {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists2 item .theme {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #pagination {
+            margin: 10px auto;
+            text-align: center;
+        }
+
+        #pagination a {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        #pagination .on {
+            font-weight: bold;
+            cursor: default;
+            color: #777;
+        }
+
+        #youtube_wrap {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 300px;
+            margin: 10px 0 30px 10px;
+            padding: 10px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.7);
+            z-index: 1;
+            font-size: 20px;
+        }
+
+        #youtube_wrap input {
+            font-size: 16px;
+            width: 170px;
+            height: 27px;
+        }
+
+        #youtube_wrap p {
+            padding: 10px 10px;
+            font-size: 20px;
+            font-family: 'Jeju Hallasan', cursive;
+        }
+
+        #youtube_wrap button {
+            padding: 5px 13px;
+            margin-left: 5px;
+            font-size: 13px;
+        }
+    </style>
+</body>
+
+</head>
+
+<body>
+    <div class="map_wrap">
+        <div id="map" style="width:100%;height:100%;position:relative;overflow:scroll;"></div>
+
+        <div id="menu_wrap" class="bg_white">
+           
+            <p> 여행지 정보와 관련 동영상을 한번에<br>검색할 수 있는 페이지입니다.</p>
+            <div class="option">
+                <div>
+                    <form onsubmit="searchPlaces(); return false;">
+                        <input type="text" value="제주도" id="keyword" size="20">
+                        <button type="submit">검색</button>
+                    </form>
+                </div>
+            </div>
+            <hr>
+            <ul id="placesList"></ul>
+            <ul id="placesLists2"></ul>
+            <div id="pagination"></div>
+        </div>
+        <div id="youtube_wrap" class="bg_white">
+            <p>유튜브 동영상 목록</p>
+            <div>
+                <form onsubmit="fnGetList(keyword); return false;">
+            </div>
+            <div id="get_view"></div>
+            <div id="nav_view"></div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript"
+        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5a6b4e5b0845903f4703ff9bc47275f2&libraries=services"></script>
+    <script>
+
+        // 마커를 담을 배열입니다
+        var markers = [];
+
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+            mapOption = {
+                center: new kakao.maps.LatLng(33.402653, 126.581539), // 지도의 중심좌표
+                level: 3 // 지도의 확대 레벨
+            };
+
+        // 지도를 생성합니다
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 장소 검색 객체를 생성합니다
+        var ps = new kakao.maps.services.Places();
+
+        // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
+        var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+
+        // 키워드로 장소를 검색합니다
+        searchPlaces();
+
+        // 키워드 검색을 요청하는 함수입니다
+        function searchPlaces() {
+
+            var keyword = document.getElementById('keyword').value;
+            var sw = new kakao.maps.LatLng(33.691104, 127.050904),
+                ne = new kakao.maps.LatLng(33.001647, 126.079987);
+            var sbounds = new kakao.maps.LatLngBounds(sw, ne);
+            
+            if (!keyword.replace(/^\s+|\s+$/g, '')) {
+                alert('키워드를 입력해주세요!');
+                return false;
+            }
+
+            // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+            ps.keywordSearch(keyword, placesSearchCB, {
+                bounds: sbounds
+            });
+
+            placesLists2.innerHTML = ""
+            
+            //유튜브 검색함수
+            fnGetList(keyword);
+
+        }
+
+        // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
+        function placesSearchCB(data, status, pagination) {
+            if (status === kakao.maps.services.Status.OK) {
+
+
+                // 정상적으로 검색이 완료됐으면
+                // 검색 목록과 마커를 표출합니다
+                displayPlaces(data);
+
+                // 페이지 번호를 표출합니다
+                displayPagination(pagination);
+
+            } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+
+                alert('검색 결과가 존재하지 않습니다.');
+                return;
+
+            } else if (status === kakao.maps.services.Status.ERROR) {
+
+                alert('검색 결과 중 오류가 발생했습니다.');
+                return;
+
+            }
+        }
+
+        // 검색 결과 목록과 마커를 표출하는 함수입니다
+        function displayPlaces(places) {
+
+            var listEl = document.getElementById('placesList'),
+                menuEl = document.getElementById('menu_wrap'),
+                fragment = document.createDocumentFragment(),
+                bounds = new kakao.maps.LatLngBounds(),
+                listStr = '';
+
+            // 검색 결과 목록에 추가된 항목들을 제거합니다
+            removeAllChildNods(listEl);
+
+            // 지도에 표시되고 있는 마커를 제거합니다
+            removeMarker();
+
+            for (var i = 0; i < places.length; i++) {
+
+                // 마커를 생성하고 지도에 표시합니다
+                var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
+                    marker = addMarker(placePosition, i),
+                    /* @@* */
+                    clickable = true, //@@마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
+                    /* @@ */
+                    itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
+
+                // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+                // LatLngBounds 객체에 좌표를 추가합니다
+                bounds.extend(placePosition);
+
+                // 마커와 검색결과 항목에 mouseover 했을때
+                // 해당 장소에 인포윈도우에 장소명을 표시합니다
+                // mouseout 했을 때는 인포윈도우를 닫습니다
+                (function (marker, title) {
+                    kakao.maps.event.addListener(marker, 'mouseover', function () {
+                        displayInfowindow(marker, title);
+                    });
+
+                    kakao.maps.event.addListener(marker, 'mouseout', function () {
+                        infowindow.close();
+                    });
+
+                    /* @@ */
+                    // 마커 클릭시 지도 변화
+                    kakao.maps.event.addListener(marker, 'click', function () {
+                        //마커의 중심좌표 얻어옴
+                        var latlng = marker.getPosition();
+                        const lat = latlng.getLat();
+                        const lng = latlng.getLng();
+
+                        apigetlist(lng, lat);
+                        //유튜브 검색 함수
+                        //var youtube = keyword;
+                        fnGetList(title);
+
+                        // 지도 중심좌표, 확대레벨, 지도타입 변경
+                        map.setCenter(new kakao.maps.LatLng(lat, lng));
+                        map.setLevel(1, { anchor: new kakao.maps.LatLng(lat, lng) });
+                        //map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
+
+                        // 지도의 마우스 휠, 모바일 터치를 이용한 확대, 축소 기능을 막음
+                        //map.setZoomable(false);
+                        // 지도에 표시되고 있는 마커를 모두 지움
+                        removeMarker();
+                        // 검색결과목록 모두 지움
+                        removeAllChildNods(listEl);
+                        // 마커 추가
+                        marker = addMarker(latlng, 0);
+                        //페이지번호 모두 지움
+                        displayPagination();
+                    });
+                    /* @@ */
+
+                    itemEl.onmouseover = function () {
+                        displayInfowindow(marker, title);
+                    };
+
+                    itemEl.onmouseout = function () {
+                        infowindow.close();
+                    };
+                })(marker, places[i].place_name);
+
+                fragment.appendChild(itemEl);
+            }
+
+            // 검색결과 항목들을 검색결과 목록 Elemnet에 추가합니다
+            listEl.appendChild(fragment);
+            menuEl.scrollTop = 0;
+
+            // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+            map.setBounds(bounds);
+        }
+
+        function apigetlist(lng, lat) {
+            var xhr = new XMLHttpRequest();
+            var url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList'; /*URL*/
+            var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + '8a0A17zptKOqfQfCcatkNu2PXiLPByX96Dm%2FFmSBUQGh8c%2Ft6LQGzSKo16tWo%2BfyRj%2F%2FdqEdcfCqaT4Op8gU2Q%3D%3D'; /*Service Key*/
+            //queryParams += '&' + encodeURIComponent('ServiceKey') + '=' + encodeURIComponent('8a0A17zptKOqfQfCcatkNu2PXiLPByX96Dm%2FFmSBUQGh8c%2Ft6LQGzSKo16tWo%2BfyRj%2F%2FdqEdcfCqaT4Op8gU2Q%3D%3D'); /*공공데이터포털에서*/
+            queryParams += '&' + encodeURIComponent('mapX') + '=' + lng; /*좌표 X*/
+            queryParams += '&' + encodeURIComponent('mapY') + '=' + lat; /*좌표 Y*/
+            queryParams += '&' + encodeURIComponent('radius') + '=' + encodeURIComponent('20000'); /*좌표 X*/
+            queryParams += '&' + encodeURIComponent('arrange') + '=' + encodeURIComponent('E');// 정렬구분 -제목순
+            queryParams += '&' + encodeURIComponent('MobileOS') + '=' + encodeURIComponent('ETC'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
+            queryParams += '&' + encodeURIComponent('MobileApp') + '=' + encodeURIComponent('YOUTRIP'); /*서비스명=어플명*/
+            queryParams += '&' + encodeURIComponent('_type') + '=' + encodeURIComponent('json');
+
+            xhr.open("GET", url + queryParams);
+            xhr.onreadystatechange = callFunction;
+
+            function callFunction() {
+                if (xhr.readyState == 4) {       ///수신완료
+                    var text = this.responseText;
+
+                    var o = JSON.parse(text)
+                    var a = o.response.body.items.item
+
+                    placesLists2.innerHTML = ""
+
+                    var contentid = a[0].contentid;
+                    var contenttypeid = a[0].contenttypeid;
+                    detailList(contentid, contenttypeid);
+                }
+            };
+            xhr.send('');
+        }
+
+        function detailList(contentid, contenttypeid) {
+
+            var xxhr = new XMLHttpRequest();
+            var uurl = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailCommon'; /*URL*/
+            var qqueryParams = '?' + encodeURIComponent('ServiceKey') + '=' + '8a0A17zptKOqfQfCcatkNu2PXiLPByX96Dm%2FFmSBUQGh8c%2Ft6LQGzSKo16tWo%2BfyRj%2F%2FdqEdcfCqaT4Op8gU2Q%3D%3D'; /*Service Key*/
+            qqueryParams += '&' + encodeURIComponent('contentId') + '=' + contentid;
+            qqueryParams += '&' + encodeURIComponent('defaultYN') + '=' + encodeURIComponent('Y');
+            qqueryParams += '&' + encodeURIComponent('addrinfoYN') + '=' + encodeURIComponent('Y');
+            qqueryParams += '&' + encodeURIComponent('overviewYN') + '=' + encodeURIComponent('Y');
+            qqueryParams += '&' + encodeURIComponent('firstImageYN') + '=' + encodeURIComponent('Y');
+            qqueryParams += '&' + encodeURIComponent('contentTypeId') + '=' + contenttypeid;
+            qqueryParams += '&' + encodeURIComponent('MobileOS') + '=' + encodeURIComponent('ETC'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
+            qqueryParams += '&' + encodeURIComponent('MobileApp') + '=' + encodeURIComponent('YOUTRIP'); /*서비스명=어플명*/
+            qqueryParams += '&' + encodeURIComponent('_type') + '=' + encodeURIComponent('json');
+
+            xxhr.open("GET", uurl + qqueryParams);
+            xxhr.onreadystatechange = ccallFunction;
+
+            function ccallFunction() {
+                if (xxhr.readyState == 4) {       ///수신완료
+                    var text2 = this.responseText;
+
+                    var o2 = JSON.parse(text2)
+                    var a2 = o2.response.body.items.item
+
+                    placesLists2.innerHTML = ""
+
+                    var div2 = document.createElement('item');
+                    var s2 = ""
+
+                    if (a2.firstimage != null) s2 += "<img class='firstimage' src='" + a2.firstimage + "'/>"
+                    if (a2.title != null) s2 += "<div class='title'>" + a2.title + "</div>"
+                    if (a2.addr1 != null) s2 += "<div class='addr1'>" + a2.addr1 + "</div>"
+                    if (a2.tel != null) s2 += "<div class='tel'>" + a2.tel + "</div>"
+                    if (a2.overview != null) s2 += "<div class='overview'>" + a2.overview + "</div>"
+
+                    div2.innerHTML = s2;
+
+                    detailIntro(contentid, contenttypeid, div2);
+                }
+            };
+            xxhr.send('');
+        }
+
+        function detailIntro(contentid, contenttypeid, div2) {
+
+            var xhr = new XMLHttpRequest();
+            var url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailIntro'; /*URL*/
+            var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + '8a0A17zptKOqfQfCcatkNu2PXiLPByX96Dm%2FFmSBUQGh8c%2Ft6LQGzSKo16tWo%2BfyRj%2F%2FdqEdcfCqaT4Op8gU2Q%3D%3D'; /*Service Key*/
+            queryParams += '&' + encodeURIComponent('contentId') + '=' + contentid;
+            queryParams += '&' + encodeURIComponent('contentTypeId') + '=' + contenttypeid;
+            queryParams += '&' + encodeURIComponent('MobileOS') + '=' + encodeURIComponent('ETC'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
+            queryParams += '&' + encodeURIComponent('MobileApp') + '=' + encodeURIComponent('YOUTRIP'); /*서비스명=어플명*/
+            queryParams += '&' + encodeURIComponent('_type') + '=' + encodeURIComponent('json');
+
+            xhr.open("GET", url + queryParams);
+            xhr.onreadystatechange = callFunction;
+
+            function callFunction() {
+                if (xhr.readyState == 4) {       ///수신완료
+                    var text = this.responseText;
+
+                    var o = JSON.parse(text)
+                    var a = o.response.body.items.item
+
+                    placesLists2.innerHTML = ""
+
+                    var div = document.createElement('item');
+                    var s = ""
+
+
+                    if (a.expagerange != null) s += "<div class='expagerange'>" + "체험가능 연령: " + a.expagerange + "</div>"
+                    if (a.expguide != null) s += "<div class='expguide'>" + "체험안내: " + a.expguide + "</div>"
+                    if (a.heritage1 != null) s += "<div class='heritage1'>" + "세계 문화유산 유무: " + a.heritage1 + "</div>"
+                    if (a.heritage2 != null) s += "<div class='heritage2'>" + "세계 자연유산 유무: " + a.heritage2 + "</div>"
+                    if (a.heritage3 != null) s += "<div class='heritage3'>" + "세계 기록유산 유무: " + a.heritage3 + "</div>"
+                    if (a.infocenter != null) s += "<div class='infocenter'>" + "문의 및 안내: " + a.infocenter + "</div>"
+                    if (a.opendate != null) s += "<div class='opendate'>" + "개장일: " + a.opendate + "</div>"
+                    if (a.parking != null) s += "<div class='parking'>" + "주차시설: " + a.parking + "</div>"
+                    if (a.restdate != null) s += "<div class='restdate'>" + "쉬는날: " + a.restdate + "</div>"
+                    if (a.useseason != null) s += "<div class='useseason'>" + "이용시기: " + a.useseason + "</div>"
+                    if (a.usetime != null) s += "<div class='usetime'>" + "이용시간: " + a.usetime + "</div>"
+
+
+                    if (a.infocenterculture != null) s += "<div class='infocenterculture'>" + "문의 및 안내: " + a.infocenterculture + "</div>"
+                    if (a.parkingculture != null) s += "<div class='parkingculture'>" + "주차시설: " + a.parkingculture + "</div>"
+                    if (a.restdateculture != null) s += "<div class='restdateculture'>" + "쉬는날: " + a.restdateculture + "</div>"
+                    if (a.usefee != null) s += "<div class='usefee'>" + "이용요금: " + a.usefee + "</div>"
+                    if (a.usetimeculture != null) s += "<div class='usetimeculture'>" + "이용시간: " + a.usetimeculture + "</div>"
+                    if (a.scale != null) s += "<div class='scale'>" + "규모: " + a.scale + "</div>"
+                    if (a.spendtime != null) s += "<div class='spendtime'>" + "관람 소요시간: " + a.spendtime + "</div>"
+
+
+                    if (a.agelimit != null) s += "<div class='agelimit'>" + "관람 가능연령: " + a.agelimit + "</div>"
+                    if (a.bookingplace != null) s += "<div class='bookingplace'>" + "예매처: " + a.bookingplace + "</div>"
+                    if (a.discountinfofestival != null) s += "<div class='discountinfofestival'>" + "할인정보: " + a.discountinfofestival + "</div>"
+                    if (a.eventenddate != null) s += "<div class='eventenddate'>" + "행사 종료일: " + a.eventenddate + "</div>"
+                    if (a.eventhomepage != null) s += "<div class='eventhomepage'>" + "행사 홈페이지: " + a.eventhomepage + "</div>"
+                    if (a.eventplace != null) s += "<div class='eventplace'>" + "행사 장소: " + a.eventplace + "</div>"
+                    if (a.eventstartdate != null) s += "<div class='eventstartdate'>" + "행사 시작일: " + a.eventstartdate + "</div>"
+                    if (a.festivalgrade != null) s += "<div class='festivalgrade'>" + "축제등급: " + a.festivalgrade + "</div>"
+                    if (a.placeinfo != null) s += "<div class='placeinfo'>" + "행사장 위치안내: " + a.placeinfo + "</div>"
+                    if (a.playtime != null) s += "<div class='playtime'>" + "공연시간: " + a.playtime + "</div>"
+                    if (a.program != null) s += "<div class='program'>" + "행사 프로그램: " + a.program + "</div>"
+                    if (a.spendtimefestival != null) s += "<div class='spendtimefestival'>" + "관람 소요시간: " + a.spendtimefestival + "</div>"
+                    if (a.sponsor1 != null) s += "<div class='sponsor1'>" + "주최자 정보: " + a.sponsor1 + "</div>"
+                    if (a.sponsor1tel != null) s += "<div class='sponsor1tel'>" + "주최자 연락처: " + a.sponsor1tel + "</div>"
+                    if (a.sponsor2 != null) s += "<div class='sponsor2'>" + "주관사 정보: " + a.sponsor2 + "</div>"
+                    if (a.sponsor2tel != null) s += "<div class='sponsor2tel'>" + "주관사 연락처: " + a.sponsor2tel + "</div>"
+                    if (a.subevent != null) s += "<div class='subevent'>" + "부대행사: " + a.subevent + "</div>"
+                    if (a.usetimefestival != null) s += "<div class='usetimefestival'>" + "이용요금: " + a.usetimefestival + "</div>"
+
+
+                    if (a.distance != null) s += "<div class='distance'>" + "코스 총거리: " + a.distance + "</div>"
+                    if (a.infocentertourcourse != null) s += "<div class='infocentertourcourse'>" + "문의 및 안내: " + a.infocentertourcourse + "</div>"
+                    if (a.schedule != null) s += "<div class='schedule'>" + "코스 일정: " + a.schedule + "</div>"
+                    if (a.taketime != null) s += "<div class='taketime'>" + "코스 총 소요시간: " + a.taketime + "</div>"
+                    if (a.theme != null) s += "<div class='theme'>" + "코스 테마: " + a.theme + "</div>"
+
+
+                    div.innerHTML = s;
+                    placesLists2.appendChild(div2);
+                    placesLists2.appendChild(div);
+                }
+            };
+            xhr.send('');
+
+        }
+
+        // 검색결과 항목을 Element로 반환하는 함수입니다
+        function getListItem(index, places) {
+
+            var el = document.createElement('li'),
+                itemStr = '<span class="markerbg marker_' + (index + 1) + '"></span>' +
+                    '<div class="info">' +
+                    '   <h5>' + places.place_name + '</h5>';
+
+            if (places.road_address_name) {
+                itemStr += '    <span>' + places.road_address_name + '</span>' +
+                    '   <span class="jibun gray">' + places.address_name + '</span>';
+            } else {
+                itemStr += '    <span>' + places.address_name + '</span>';
+            }
+
+            itemStr += '  <span class="tel">' + places.phone + '</span>' +
+                '</div>';
+
+            el.innerHTML = itemStr;
+            el.className = 'item';
+
+            return el;
+        }
+
+        // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
+        function addMarker(position, idx, title) {
+            var imageSrc = 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+                imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
+                imgOptions = {
+                    spriteSize: new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
+                    spriteOrigin: new kakao.maps.Point(0, (idx * 46) + 10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+                    offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+                },
+                markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+                marker = new kakao.maps.Marker({
+                    position: position, // 마커의 위치
+                    image: markerImage
+                });
+
+            marker.setMap(map); // 지도 위에 마커를 표출합니다
+            markers.push(marker);  // 배열에 생성된 마커를 추가합니다
+
+            return marker;
+        }
+
+        // 지도 위에 표시되고 있는 마커를 모두 제거합니다
+        function removeMarker() {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+            }
+            markers = [];
+        }
+
+        // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
+        function displayPagination(pagination) {
+            var paginationEl = document.getElementById('pagination'),
+                fragment = document.createDocumentFragment(),
+                i;
+
+            // 기존에 추가된 페이지번호를 삭제합니다
+            while (paginationEl.hasChildNodes()) {
+                paginationEl.removeChild(paginationEl.lastChild);
+            }
+
+            for (i = 1; i <= pagination.last; i++) {
+                var el = document.createElement('a');
+                el.href = "#";
+                el.innerHTML = i;
+
+                if (i === pagination.current) {
+                    el.className = 'on';
+                } else {
+                    el.onclick = (function (i) {
+                        return function () {
+                            pagination.gotoPage(i);
+                        }
+                    })(i);
+                }
+
+                fragment.appendChild(el);
+            }
+            paginationEl.appendChild(fragment);
+        }
+
+        // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
+        // 인포윈도우에 장소명을 표시합니다
+        function displayInfowindow(marker, title) {
+            var content = '<div style="padding:10px;z-index:5;">' + title + '</div>';
+
+            infowindow.setContent(content);
+            infowindow.open(map, marker);
+        }
+
+        // 검색결과 목록의 자식 Element를 제거하는 함수입니다
+        function removeAllChildNods(el) {
+            while (el.hasChildNodes()) {
+                el.removeChild(el.lastChild);
+            }
+        }
+
+        // 유튜브 검색 함수
+        function fnGetList(title) {
+
+            $("#get_view").empty();
+            $("#nav_view").empty();
+
+            var sTargetUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&order=relevance&location=33.447037,126.6652511&locationRadius=10mi&type=video"
+                + "&q=" + 에코랜드 + "&key=AIzaSyAWWYpPOZdm1uzZcPIWGb8G620gzzbaMJA" ;
+            alert (StargetUrl);
+            $.ajax({
+                type: "POST",
+                url: sTargetUrl,
+                dataType: "jsonp",
+                success: function (jdata) {
+                    //console.log(jdata);
+
+                    $(jdata.items).each(function (i) {
+                        //console.log(this.snippet.channelId);
+                        $("#get_view").append("<p class='box', style='font-size: 15px;'><a href='https://youtu.be/" + this.id.videoId + "' target='_blank'><img src='" + this.snippet.thumbnails.medium.url + "' width='270px'><br><span>" + this.snippet.title + "</span></a></p>");
+                    }).promise().done(function () {
+                        if (jdata.prevPageToken) {
+                            //$("#nav_view").append("<a href='javascript:fnGetList(\"" + title + " + " + jdata.prevPageToken + "\");'><이전페이지></a>");
+                        }
+                        if (jdata.nextPageToken) {
+                            //$("#nav_view").append("<a href='javascript:fnGetList(\"" + title + " + " + jdata.nextPageToken + "\");'><다음페이지></a>");
+                        }
+                    });
+                },
+                error: function (xhr, textStatus) {
+                    console.log(xhr.responseText);
+                    alert("지금은 시스템 사정으로 인하여 요청하신 작업이 이루어지지 않았습니다.\n잠시후 다시 이용하세요.[2]");
+                    return;
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>
