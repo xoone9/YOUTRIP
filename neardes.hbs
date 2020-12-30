@@ -11,6 +11,7 @@
         body {
             background-color: #9dbad1;
         }
+
         h1 {
             font-size: 35px;
             font-family: 'Jeju Hallasan', cursive;
@@ -40,7 +41,7 @@
             display: inline-block;
             color: #f2f2f2;
             text-align: center;
-            padding: 14px 16px;
+            padding: 14px 20px;
             text-decoration: none;
             transition: 0.3s;
             font-size: 17px;
@@ -99,8 +100,8 @@
         <li><a href='./about'>ABOUT</a></li>
         <li><a href='./search'>지도검색</a></li>
         <li><a href='./category'>카테고리검색</a></li>
-        <li><a href='./navi'>경로겸색?</a></li>
         <li><a href='./neardes'>주변검색</a></li>
+        <li><a href='./navi'>경로검색</a></li>
         <li class="icon">
             <a href="javascript:void(0);" style="font-size:15px;" onclick="myFunction()">☰</a>
         </li>
@@ -190,7 +191,7 @@
             font-size: 13px;
         }
 
-         #placesList li {
+        #placesList li {
             list-style: none;
             margin: 6px;
             padding: 6px;
@@ -304,17 +305,47 @@
         #placesList .item .marker_15 {
             background-position: 0 -654px;
         }
-        
+
         #placesLists li {
             list-style: none;
         }
 
-        #placesLists item{ margin:6px; padding:6px; background:#fff; border-radius: 10px; display:block; border-bottom: 1px solid #888;}
-        #placesLists item .contentid { font-weight: bold; margin-bottom:2px;}
-        #placesLists item .title { color:#333; font-weight: bold; font-size: 17px; font-family: 'Jeju Gothic', sans-serif;}
-        #placesLists item .addr1 { color:#666; font-size: 15px; font-family: 'Jeju Gothic', sans-serif;}
-        #placesLists item .tel {  color:#999; font-size: 15px; font-family: 'Jeju Gothic', sans-serif;}
-        #placesLists item img { width:100%  }
+        #placesLists item {
+            margin: 6px;
+            padding: 6px;
+            background: #fff;
+            border-radius: 10px;
+            display: block;
+            border-bottom: 1px solid #888;
+        }
+
+        #placesLists item .contentid {
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        #placesLists item .title {
+            color: #333;
+            font-weight: bold;
+            font-size: 17px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists item .addr1 {
+            color: #666;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists item .tel {
+            color: #999;
+            font-size: 15px;
+            font-family: 'Jeju Gothic', sans-serif;
+        }
+
+        #placesLists item img {
+            width: 100%
+        }
 
         #pagination {
             margin: 10px auto;
@@ -362,7 +393,7 @@
             background: #fff;
             border-radius: 10px;
             display: block;
-            
+
         }
 
         #placesLists2 item .contentid {
@@ -402,7 +433,6 @@
         #placesLists2 item img {
             width: 100%;
         }
-
     </style>
 </body>
 
@@ -413,7 +443,7 @@
         <div id="map" style="width:100%;height:100%;position:relative;overflow:scroll;"></div>
 
         <div id="menu_wrap" class="bg_white">
-             <p>검색한 관광지와 가까운 관광지를<br>확인할 수 있는 페이지입니다.</p>
+            <p>검색한 관광지와 가까운 관광지를<br>확인할 수 있는 페이지입니다.</p>
             <div class="option">
                 <div>
                     <form onsubmit="searchPlaces(); return false;">
@@ -536,9 +566,9 @@
                     /* @@ */
                     itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
 
-                    // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-                    // LatLngBounds 객체에 좌표를 추가합니다
-                    bounds.extend(placePosition);
+                // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+                // LatLngBounds 객체에 좌표를 추가합니다
+                bounds.extend(placePosition);
 
                 // 마커와 검색결과 항목에 mouseover 했을때
                 // 해당 장소에 인포윈도우에 장소명을 표시합니다
@@ -562,7 +592,7 @@
                         var latlng = marker.getPosition();
                         const lat = latlng.getLat();
                         const lng = latlng.getLng();
-                        
+
                         // 지도에 표시되고 있는 마커를 모두 지움
                         removeMarker();
                         // 주변 여행지 정보 가져옴
@@ -616,16 +646,16 @@
 
             function callFunction() {
                 if (xhr.readyState == 4) {       ///수신완료
-                      var text = this.responseText;
+                    var text = this.responseText;
 
-                      var o = JSON.parse( text )
-                      var a = o.response.body.items.item
-                      //지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체를 생성
-                      var points = new kakao.maps.LatLngBounds();
-                      
-                      placesLists.innerHTML = ""
+                    var o = JSON.parse(text)
+                    var a = o.response.body.items.item
+                    //지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체를 생성
+                    var points = new kakao.maps.LatLngBounds();
 
-                      for( var i=0; i<a.length; i++ ){                        
+                    placesLists.innerHTML = ""
+
+                    for (var i = 0; i < a.length; i++) {
                         // 마커생성
                         var latlng2 = new Array();
                         latlng2[i] = new kakao.maps.LatLng(a[i].mapy, a[i].mapx);
@@ -652,20 +682,20 @@
                             position: latlng2[i],
                             //content: '<div class ="label"><span class="left"></span><span class="center", style="font-size: 20px; font-weight:bold;">' + iwtitle[i] + '</span><span class="right"></span></div>'
                             content: '<span class="left"></span><span class="center", style="padding-left: 10px; padding-right: 10px; white-space: nowrap; font-size: 20px; text-align: center;">' + iwtitle[i] + '</span><span class="right"></span>'
-                       });
+                        });
 
-                        (function(marker2, infowindow2) {
+                        (function (marker2, infowindow2) {
                             // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다 
-                            kakao.maps.event.addListener(marker2, 'mouseover', function() {
+                            kakao.maps.event.addListener(marker2, 'mouseover', function () {
                                 infowindow2.open(map, marker2);
                             });
 
                             // 마커에 mouseout 이벤트를 등록하고 마우스 아웃 시 인포윈도우를 닫습니다
-                            kakao.maps.event.addListener(marker2, 'mouseout', function() {
+                            kakao.maps.event.addListener(marker2, 'mouseout', function () {
                                 infowindow2.close();
                             });
 
-                            kakao.maps.event.addListener(marker2, 'click', function() {
+                            kakao.maps.event.addListener(marker2, 'click', function () {
                                 var latlng2 = marker2.getPosition();
                                 const lat2 = latlng2.getLat();
                                 const lng2 = latlng2.getLng();
@@ -676,26 +706,26 @@
                         // 공공데이터포털의 국내관광정보 api 정보를 출력합니다
                         var div = document.createElement('item');
                         var s = ""
-                        
-                        if( a[i].firstimage!= null ) s+= "<img class='firstimage'src='"+a[i].firstimage+"'/>"
+
+                        if (a[i].firstimage != null) s += "<img class='firstimage'src='" + a[i].firstimage + "'/>"
                         //if( a[i].contentid != null ) s+= "<div class='contentid'>"+a[i].contentid +"</div>"
-                        if( a[i].title     != null ) s+= "<div class='title'>"+a[i].title +"</div>"
-                        if( a[i].addr1     != null ) s+= "<div class='addr1'>"+a[i].addr1 +"</div>"
-                        if( a[i].tel       != null ) s+= "<div class='tel'>"+a[i].tel +"</div>"
+                        if (a[i].title != null) s += "<div class='title'>" + a[i].title + "</div>"
+                        if (a[i].addr1 != null) s += "<div class='addr1'>" + a[i].addr1 + "</div>"
+                        if (a[i].tel != null) s += "<div class='tel'>" + a[i].tel + "</div>"
                         div.innerHTML = s;
 
-                        placesLists.appendChild( div );
+                        placesLists.appendChild(div);
 
-                      }
-                      // 주변위치가 보이게 지도 범위 재설정
-                      map.setBounds(points);
-                      var contentid = a[0].contentid;
-                      detailList(contentid);
+                    }
+                    // 주변위치가 보이게 지도 범위 재설정
+                    map.setBounds(points);
+                    var contentid = a[0].contentid;
+                    detailList(contentid);
 
                 }
             };
 
-           xhr.send('');
+            xhr.send('');
         }
 
         function apigetlist2(lng, lat) {
@@ -716,65 +746,65 @@
 
             function callFunction() {
                 if (xhr.readyState == 4) {       ///수신완료
-                      var text = this.responseText;
+                    var text = this.responseText;
 
-                      var o = JSON.parse( text )
-                      var a = o.response.body.items.item
-                      
-                      var contentid = a[0].contentid;
-                      detailList(contentid);
+                    var o = JSON.parse(text)
+                    var a = o.response.body.items.item
+
+                    var contentid = a[0].contentid;
+                    detailList(contentid);
 
                 }
             };
 
-           xhr.send('');
+            xhr.send('');
         }
 
 
         function detailList(contentid) {
 
-                var xxhr = new XMLHttpRequest();
-                var uurl = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailCommon'; /*URL*/
-                var qqueryParams = '?' + encodeURIComponent('ServiceKey') + '=' + '8a0A17zptKOqfQfCcatkNu2PXiLPByX96Dm%2FFmSBUQGh8c%2Ft6LQGzSKo16tWo%2BfyRj%2F%2FdqEdcfCqaT4Op8gU2Q%3D%3D'; /*Service Key*/
-                //queryParams += '&' + encodeURIComponent('ServiceKey') + '=' + encodeURIComponent('8a0A17zptKOqfQfCcatkNu2PXiLPByX96Dm%2FFmSBUQGh8c%2Ft6LQGzSKo16tWo%2BfyRj%2F%2FdqEdcfCqaT4Op8gU2Q%3D%3D'); /*공공데이터포털에서*/
-                qqueryParams += '&' + encodeURIComponent('contentId') + '=' + contentid;
-                qqueryParams += '&' + encodeURIComponent('defaultYN') + '=' + encodeURIComponent('Y');
-                qqueryParams += '&' + encodeURIComponent('addrinfoYN') + '=' + encodeURIComponent('Y');
-                qqueryParams += '&' + encodeURIComponent('overviewYN') + '=' + encodeURIComponent('Y');
-                qqueryParams += '&' + encodeURIComponent('firstImageYN') + '=' + encodeURIComponent('Y');
-               // qqueryParams += '&' + encodeURIComponent('contentTypeId') + '=' + encodeURIComponent('15');
-                qqueryParams += '&' + encodeURIComponent('MobileOS') + '=' + encodeURIComponent('ETC'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
-                qqueryParams += '&' + encodeURIComponent('MobileApp') + '=' + encodeURIComponent('YOUTRIP'); /*서비스명=어플명*/
-                qqueryParams += '&' + encodeURIComponent('_type') + '=' + encodeURIComponent('json');
+            var xxhr = new XMLHttpRequest();
+            var uurl = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailCommon'; /*URL*/
+            var qqueryParams = '?' + encodeURIComponent('ServiceKey') + '=' + '8a0A17zptKOqfQfCcatkNu2PXiLPByX96Dm%2FFmSBUQGh8c%2Ft6LQGzSKo16tWo%2BfyRj%2F%2FdqEdcfCqaT4Op8gU2Q%3D%3D'; /*Service Key*/
+            //queryParams += '&' + encodeURIComponent('ServiceKey') + '=' + encodeURIComponent('8a0A17zptKOqfQfCcatkNu2PXiLPByX96Dm%2FFmSBUQGh8c%2Ft6LQGzSKo16tWo%2BfyRj%2F%2FdqEdcfCqaT4Op8gU2Q%3D%3D'); /*공공데이터포털에서*/
+            qqueryParams += '&' + encodeURIComponent('contentId') + '=' + contentid;
+            qqueryParams += '&' + encodeURIComponent('defaultYN') + '=' + encodeURIComponent('Y');
+            qqueryParams += '&' + encodeURIComponent('addrinfoYN') + '=' + encodeURIComponent('Y');
+            qqueryParams += '&' + encodeURIComponent('overviewYN') + '=' + encodeURIComponent('Y');
+            qqueryParams += '&' + encodeURIComponent('firstImageYN') + '=' + encodeURIComponent('Y');
+            // qqueryParams += '&' + encodeURIComponent('contentTypeId') + '=' + encodeURIComponent('15');
+            qqueryParams += '&' + encodeURIComponent('MobileOS') + '=' + encodeURIComponent('ETC'); /*IOS(아이폰),AND(안드로이드),WIN(원도우폰),ETC*/
+            qqueryParams += '&' + encodeURIComponent('MobileApp') + '=' + encodeURIComponent('YOUTRIP'); /*서비스명=어플명*/
+            qqueryParams += '&' + encodeURIComponent('_type') + '=' + encodeURIComponent('json');
 
-                xxhr.open("GET", uurl + qqueryParams);
-                xxhr.onreadystatechange = ccallFunction;
+            xxhr.open("GET", uurl + qqueryParams);
+            xxhr.onreadystatechange = ccallFunction;
 
-                function ccallFunction() {
-                    if (xxhr.readyState == 4) {       ///수신완료
-                        var text2 = this.responseText;
-                        
-                        var o2 = JSON.parse(text2)
-                        var a2 = o2.response.body.items.item
-                        placesLists2.innerHTML = ""
+            function ccallFunction() {
+                if (xxhr.readyState == 4) {       ///수신완료
+                    var text2 = this.responseText;
 
-                        var div2 = document.createElement('item');
-                        var s2 = ""
-                      
-                        if (a2.firstimage != null) s2 += "<img class='firstimage' src='" + a2.firstimage + "'/>"
-                        if (a2.title != null) s2 += "<div class='title'>" + a2.title + "</div>"
-                        if (a2.addr1 != null) s2 += "<div class='addr1'>" + a2.addr1 + "</div>"
-                        if (a2.tel != null) s2 += "<div class='tel'>" + a2.tel + "</div>"
-                        if (a2.overview != null) s2 += "<div class='overview'>" + a2.overview + "</div>"
-                        
-                        div2.innerHTML = s2;
+                    var o2 = JSON.parse(text2)
+                    var a2 = o2.response.body.items.item
+                    placesLists2.innerHTML = ""
 
-                        placesLists2.appendChild(div2);
-                       
-                    }
+                    var div2 = document.createElement('item');
+                    var s2 = ""
 
-                };
-                xxhr.send('');   
+                    if (a2.firstimage != null) s2 += "<img class='firstimage' src='" + a2.firstimage + "'/>"
+                    if (a2.title != null) s2 += "<div class='title'>" + a2.title + "</div>"
+                    if (a2.addr1 != null) s2 += "<div class='addr1'>" + a2.addr1 + "</div>"
+                    if (a2.tel != null) s2 += "<div class='tel'>" + a2.tel + "</div>"
+                    if (a2.overview != null) s2 += "<div class='overview'>" + a2.overview + "</div>"
+
+                    div2.innerHTML = s2;
+
+                    placesLists2.appendChild(div2);
+
+                }
+
+            };
+            xxhr.send('');
         }
 
         // 검색결과 항목을 Element로 반환하는 함수입니다

@@ -41,7 +41,7 @@
             display: inline-block;
             color: #f2f2f2;
             text-align: center;
-            padding: 14px 16px;
+            padding: 14px 20px;
             text-decoration: none;
             transition: 0.3s;
             font-size: 17px;
@@ -100,9 +100,8 @@
             <li><a href='./about'>ABOUT</a></li>
             <li><a href='./search'>지도검색</a></li>
             <li><a href='./category'>카테고리검색</a></li>
-            <li><a href='./navi'>경로겸색?</a></li>
             <li><a href='./neardes'>주변검색</a></li>
-
+            <li><a href='./navi'>경로검색</a></li>
             <li class="icon">
                 <a href="javascript:void(0);" style="font-size:15px;" onclick="myFunction()">☰</a>
             </li>
@@ -165,13 +164,14 @@
                 border-top: 2px solid #5F5F5F;
                 margin: 3px 0;
             }
+
             #menu_wrap p {
-            padding: 5px 0px;
-            font-size: 15px;
-            font-family: 'Jeju Hallasan', sans-serif;
-            text-align: center;
-        }
-          
+                padding: 5px 0px;
+                font-size: 15px;
+                font-family: 'Jeju Hallasan', sans-serif;
+                text-align: center;
+            }
+
             #menu_wrap .categorybtn input {
                 text-align: center;
                 font-size: 15px;
@@ -194,7 +194,7 @@
                 z-index: 1;
             }
 
-           
+
             /*버튼 클릭하면 나오는 정보*/
 
             #detailList item {
@@ -470,10 +470,10 @@
             <div id="map" style="width:100%;height:100%;position:relative;overflow:scroll;"></div>
 
             <div id="menu_wrap" class="bg_white">
-                 <p>카테고리별로 검색할 수 있는 페이지입니다.</p>
+                <p>카테고리별로 검색할 수 있는 페이지입니다.</p>
                 <div class="categorybtn">
                     <div>
-                        <form>                          
+                        <form>
 
                             <style>
                                 #category button {
@@ -482,26 +482,30 @@
                                     background-color: #ffffff;
                                     background-color: rgba(255, 255, 255, 0)
                                 }
+
                                 #category button:hover {
                                     color: white;
                                     background-color: skyblue;
                                 }
                             </style>
 
-                            <div id = "category">
+                            <div id="category">
                                 <!-- <input type='BUTTON' value='음식점' onclick='food()'>
                                 <input type='BUTTON' value='쇼핑' onclick='shopping()'>
                                 <input type='BUTTON' value='레포츠' onclick='sport()'> -->
-                                <button type = "button" id="" onclick = 'food()' >
-                                    <img src = "https://user-images.githubusercontent.com/59672611/80338855-5b83eb00-8898-11ea-9a61-f7c1cd0ace23.png" width=35px;>
+                                <button type="button" id="" onclick='food()'>
+                                    <img src="https://user-images.githubusercontent.com/59672611/80338855-5b83eb00-8898-11ea-9a61-f7c1cd0ace23.png"
+                                        width=35px;>
                                     음식점
                                 </button>
-                                <button type = "button" id="" onclick = 'shopping()' >
-                                    <img src = "https://user-images.githubusercontent.com/59672611/80340326-65f3b400-889b-11ea-8946-89976f1e38df.png" width=65px;>
+                                <button type="button" id="" onclick='shopping()'>
+                                    <img src="https://user-images.githubusercontent.com/59672611/80340326-65f3b400-889b-11ea-8946-89976f1e38df.png"
+                                        width=65px;>
                                     쇼핑
                                 </button>
-                                <button type = "button" id="" onclick = 'sport()' >
-                                    <img src = "https://user-images.githubusercontent.com/59672611/80340320-64c28700-889b-11ea-9d6c-d0287652d507.png" width=45px;>
+                                <button type="button" id="" onclick='sport()'>
+                                    <img src="https://user-images.githubusercontent.com/59672611/80340320-64c28700-889b-11ea-9d6c-d0287652d507.png"
+                                        width=45px;>
                                     레포츠
                                 </button>
                             </div>
@@ -515,13 +519,14 @@
             <div id="youtube_wrap" class="bg_white">
 
                 <ul id="placesLists2"></ul>
-                
+
             </div>
 
             <!-- 지도를 표시할 div 입니다 -->
             <div id="map" style="width:100%;height:750px;"></div>
 
-            <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5a6b4e5b0845903f4703ff9bc47275f2&libraries=services,clusterer"></script>
+            <script type="text/javascript"
+                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5a6b4e5b0845903f4703ff9bc47275f2&libraries=services,clusterer"></script>
             <script>
                 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
                     mapOption = {
@@ -535,10 +540,10 @@
 
                 // 클러스터 생성
                 var clusterer = new kakao.maps.MarkerClusterer({
-                   map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
-                   averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
-                   minLevel: 6 // 클러스터 할 최소 지도 레벨 
-               });
+                    map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
+                    averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
+                    minLevel: 6 // 클러스터 할 최소 지도 레벨 
+                });
 
                 function food() {
                     removeMarker2();
@@ -559,7 +564,7 @@
 
                     xhr.open("GET", url + queryParams);
                     xhr.onreadystatechange = callFunction;
-                    
+
                     function callFunction() {
                         if (xhr.readyState == 4) {       ///수신완료
                             var text = this.responseText;
@@ -567,7 +572,7 @@
                             var food = o.response.body.items.item
                             detailList.innerHTML = ""
 
-                                
+
                             for (var i = 0; i < food.length; i++) {
 
                                 // 마커생성
@@ -581,9 +586,9 @@
                                     position: latlng_food[i],
                                     image: markerImage,
                                     clickable: true
-                                });                             
+                                });
                                 marker_arr.push(marker_food);
-                                
+
                                 // 인포윈도우 생성
                                 var iw_food = new Array();
                                 iw_food[i] = food[i].title;
@@ -726,7 +731,7 @@
                     clusterer.clear();
                     map.setLevel(9);
                     map.setCenter(new kakao.maps.LatLng(33.402653, 126.581539));
-                    
+
                     var xhr = new XMLHttpRequest();
                     var url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList'; /*URL*/
                     var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + '8a0A17zptKOqfQfCcatkNu2PXiLPByX96Dm%2FFmSBUQGh8c%2Ft6LQGzSKo16tWo%2BfyRj%2F%2FdqEdcfCqaT4Op8gU2Q%3D%3D'; /*Service Key*/
@@ -839,7 +844,7 @@
                             var o = JSON.parse(text)
                             var a = o.response.body.items.item
 
-                           
+
 
                             var div = document.createElement('item');
                             var s = ""
@@ -850,7 +855,7 @@
                             if (a[0].tel != null) s += "<div class='tel'>" + a[0].tel + "</div>"
                             div.innerHTML = s;
 
-                           
+
 
 
                             var contentid = a[0].contentid;
@@ -891,7 +896,7 @@
 
                             if (a2.accomcountleports != null) s2 += "<div class='accomcountleports'>" + "수용인원: " + a2.accomcountleports + "</div>"
                             if (a2.expagerangeleports != null) s2 += "<div class='expagerangeleports'>" + "체험 가능연령: " + a2.expagerangeleports + "</div>"
-                            if (a2.infocenterleports != null) s2 += "<div class='infocenterleports'>" +"문의 및 안내: " + a2.infocenterleports + "</div>"
+                            if (a2.infocenterleports != null) s2 += "<div class='infocenterleports'>" + "문의 및 안내: " + a2.infocenterleports + "</div>"
                             if (a2.openperiod != null) s2 += "<div class='openperiod'>" + "개장시간: " + a2.openperiod + "</div>"
                             if (a2.parkingleports != null) s2 += "<div class='parkingleports'>" + "주차시설: " + a2.parkingleports + "</div>"
                             if (a2.reservation != null) s2 += "<div class='reservation'>" + "예약안내: " + a2.reservation + "</div>"
