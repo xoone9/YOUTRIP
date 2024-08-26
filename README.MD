@@ -47,7 +47,7 @@ YOUTUBE 동영상과 카카오 맵, TMAP, 공공데이터 포털의 여행지 �
 
 * 경로검색
 
-<img src="https://github.com/xoone9/youtrip/assets/59681873/31433bc0-c7ba-44a9-829c-8b08655aecb3" width="900" height="505" title="tmap" alt="tmap"></img><br/>
+<img src="https://github.com/xoone9/youtrip/assets/59681873/31433bc0-c7ba-44a9-829c-8b08655aecb3" width="900" height="505" title="tmap" alt="tmap"></img><br/> 
 
 
 
